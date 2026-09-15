@@ -1,0 +1,12 @@
+# 依赖装在项目本地，不入库
+/vendor/bundle
+/.bundle
+
+# 密钥绝不入库
+.env
+.env.*
+!.env.example
+
+# 杂项
+*.bak
+.DS_Store
