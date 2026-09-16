@@ -2,6 +2,14 @@
 
 用 Ruby 做 AI 命令行工具的最小起点。一个能跑的示例，外加一份踩坑记录。
 
+> **⚠️ 关于 [`reference/`](reference/) 目录**
+>
+> 该目录下的代码**不是本仓库原创**，来自 [crmne/ruby_llm](https://github.com/crmne/ruby_llm)，
+> 版权归 Copyright (c) 2025 Carmine Paolino，依 MIT 协议收录，仅作设计参考，不参与构建。
+> 详见 [reference/README.md](reference/README.md) 和 [reference/LICENSE-ruby_llm](reference/LICENSE-ruby_llm)。
+>
+> 本仓库自身的原创代码只有 [`demo_claude.rb`](demo_claude.rb)。
+
 示例基于 [RubyLLM](https://github.com/crmne/ruby_llm) 调用 Claude，演示做 CLI 必需的三件事：
 
 - **流式输出** —— 不做的话用户会盯着空白终端等十几秒
