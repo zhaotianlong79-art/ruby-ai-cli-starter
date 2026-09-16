@@ -8,6 +8,29 @@
 - **工具调用**（function calling）—— 让模型能读取本地状态
 - **用量统计** —— 用来算成本
 
+## RubyLLM 是什么
+
+[RubyLLM](https://github.com/crmne/ruby_llm) 是 Ruby 的 **LLM 统一接口层**。
+
+它解决的问题是：今天用 Claude，明天要换 Gemini 省钱，后天要加个本地 Ollama 做隐私兜底。直接调各家 SDK 的话，每换一家就得重写业务代码——参数名、流式协议、工具调用格式、多模态传法，各家全都不一样。
+
+RubyLLM 把这些差异吃掉，对外只暴露一套 API：
+
+```ruby
+RubyLLM.chat(model: "claude-opus-5").ask "..."
+RubyLLM.chat(model: "gemini-3.7-flash").ask "..."   # 换个字符串，业务代码不动
+```
+
+覆盖 17 个 provider（OpenAI、Anthropic、Gemini、Bedrock、Vertex、xAI、Mistral、DeepSeek、Ollama 等），内置 1669 个模型的注册表——所以不配置任何东西就能查到 `claude-opus-5` 的上下文窗口是 1M、输出上限 128K。
+
+功能面覆盖对话（文本/图片/音频/视频/PDF）、图像生成、embeddings、工具调用、结构化输出、流式，外加一套 Rails 集成（`acts_as_chat` 直接把对话存进 ActiveRecord）。
+
+定位类似 Python 的 LangChain，但轻得多——运行时依赖只有 10 个 gem，没有那套沉重的抽象。
+
+### 什么时候不该用它
+
+**如果你只接 Claude，就别用。** 多 provider 抽象层在这种场景下是纯粹的额外开销，[官方 `anthropic` gem](https://github.com/anthropics/anthropic-sdk-ruby) 少一层间接、跟 API 同步更快。RubyLLM 的价值只在你**确实要切换或同时支持多家模型**时才体现出来。
+
 ## 快速开始
 
 ```bash
@@ -45,7 +68,7 @@ gem 'ruby_llm', '2.0.0.rc3'
 2.0 里几个容易写错的地方（README 上看不出来，得翻源码）：
 
 | 写法 | 正确 | 说明 |
-|---|---|---|
+| --- | --- | --- |
 | `chat.with_tool(T)` | `chat.with_tools(T)` | 只有复数形式，单数不存在 |
 | `param :x, desc: ...` | `parameter :x, description: ...` | 方法名和关键字名都不同 |
 | 手写完整 schema | 通常不用写 | schema 会从 `execute` 的关键字参数自动推断，只在需要补描述或指定类型时才显式声明 |
